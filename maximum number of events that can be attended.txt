@@ -1,0 +1,143 @@
+void merge(int **a,int l,int m,int r)
+{
+int x=m-l+1,y=r-m,i,j,k;
+int **c=(int**)malloc(x*sizeof(int*));
+int **d=(int**)malloc(y*sizeof(int*));
+for(i=0;i<x;i++)
+
+{
+c[i]=(int*)malloc(2*sizeof(int));
+c[i]=a[l+i];
+}
+for(i=0;i<y;i++)
+{
+d[i]=(int*)malloc(2*sizeof(int));
+d[i]=a[m+1+i];
+}
+i=0,j=0,k=l;
+while(i<x && j<y)
+{
+if(c[i][0]<=d[j][0])
+a[k]=c[i],i++;
+else
+a[k]=d[j], j++;
+
+k++;
+}
+
+for(;i<x;i++,k++)
+a[k]=c[i];
+for(;j<y;j++,k++)
+a[k]=d[j];
+}
+
+void mergeSort(int **a,int l,int r)
+{
+if(l<r)
+{
+int m=(l+r)/2;
+
+mergeSort(a,l,m);
+mergeSort(a,m+1,r);
+merge(a,l,m,r);
+}
+}
+
+void insert(int pq[],int n)
+{
+int i,ele=pq[n];
+for(i=n;i>1 && pq[i/2]>ele;i=i/2)
+pq[i]=pq[i/2];
+
+pq[i]=ele;
+}
+
+void delete(int pq[],int n)
+{
+pq[1]=pq[n];
+int j=2,ele=pq[1];
+n--;
+while(j<=n)
+{
+if(j<n && pq[j]>pq[j+1])
+j++;
+if(ele<=pq[j])
+break;
+pq[j/2]=pq[j];
+j=2*j;
+}
+pq[j/2]=ele;
+}
+
+int maxEvents(int** events, int eventsSize, int eventsColSize){
+
+int **e=events;
+int i,*t,s=eventsSize;
+mergeSort(e,0,s-1);
+
+int pq[100001],n=0,c=0,d;
+i=0;
+for(d=1;d<=100000;d++)
+{
+for(;i<s && e[i][0]==d;i++)
+{
+n++;
+pq[n]=e[i][1];
+insert(pq,n);
+}
+for(;n!=0 && pq[1]<d;n--)
+delete(pq,n);
+
+if(n!=0)
+{
+delete(pq,n);
+c++;
+n--;
+}
+}
+return c;
+}
+
+
+
+
+
+
+
+void sortevents(int** events, int eventsSize, int eventsColSize){
+    for(int i=0; i<eventsSize-1; i++){
+        for(int j=1+i; j<eventsSize; j++){
+            if(events[i][1]>events[j][1]){
+                int temp = events[i][0];
+                events[i][0] = events[j][0];
+                events[j][0] = temp;
+                temp = events[i][1];
+                events[i][1] = events[j][1];
+                events[j][1] = temp;
+            }
+        }
+    }
+}
+
+int maxEvents(int** events, int eventsSize, int eventsColSize){
+
+    sortevents(events, eventsSize, eventsColSize);
+    int c=0;
+    int eve_chk[events[eventsSize-1][1]];
+    for(int i=0; i<events[eventsSize-1][1]; i++){
+        eve_chk[i]=0;
+    }
+    for(int i=0; i<eventsSize; i++){
+        int t1 = events[i][0];
+        int t2 = events[i][1];
+        for(int j=t1-1; j<t2; j++){
+            if(eve_chk[j]==0){
+                //printf("check = %d\n", eve_chk[j]);
+                c+=1;
+                eve_chk[j]=1;
+                break;
+            }
+        }
+    }
+    return c;
+}

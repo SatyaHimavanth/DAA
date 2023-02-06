@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int in(char ch, char a[], int b){
+    int i=0, c=-1;
+    while(i<b){
+        if(a[i]==ch){
+            c=i;
+            break;
+        }
+        else
+            i++;
+    }
+    return c;
+}
+
+int lengthOfLongestSubstring(char * s){
+    int b=0, i=0;
+    char sub[50][100];
+    char arr[100];
+    memset(arr, '\0', sizeof(arr));
+    int k=0;
+    while(s[i]!='\0'){
+        if(k!=0){
+            int c = in(s[i], arr, k);
+            if(c==-1){
+                // printf("check 1 %c %s %d\n",s[i], arr, k);
+                arr[k++]=s[i];
+            }
+            else{
+                // printf("check 2 %s %d\n", arr, k);
+                if(strcmp(sub[b], arr))
+                    strcpy(sub[b++], arr);
+                int l = strlen(arr)-c;
+                memset(arr, '\0', sizeof(arr));
+                k=0;
+                i=i-l;
+            }
+        }
+        else{
+            arr[k++]=s[i];
+        }
+        i+=1;
+    }
+    strcpy(sub[b++], arr);
+    int max=0;
+    for(int j=0; j<b; j++){
+        if(max<strlen(sub[j])){
+            max=strlen(sub[j]);
+        }
+        // printf("%s %ld\n", sub[j], strlen(sub[j]));
+    }
+    return max;
+}
+
+int main()
+{
+    char s[100];
+    printf("Enter String :\n");
+    scanf("%s", s); //"abcabcbb"
+    int res=lengthOfLongestSubstring(s);
+    printf("\n%d", res);
+}
+
+Note:
+this input(985 / 987 testcases passed) is producing an error "ERROR: AddressSanitizer: stack-buffer-overflow"
+but runs on online compiler.
+try rectifying it.
+"hijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789hijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789hijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789hijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789hijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789hijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"

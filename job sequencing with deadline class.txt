@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void swap(int *a, int *b){
+    int t=*a;
+    *a=*b;
+    *b=t;
+}
+
+void sorting(int a1[], int a2[], int a3[], int n){
+    for(int i=0; i<n-1; i++){
+        for(int j=i+1; j<n; j++){
+            if(a3[i]<a3[j]){
+                swap(&a3[i], &a3[j]);
+                swap(&a2[i], &a2[j]);
+                swap(&a1[i], &a1[j]);
+            }
+        }
+    }
+}
+
+int profit_cal(int a1[], int a2[], int a3[], int m, int n){
+    int sol[n];
+    for(int i=0; i<n; i++){
+        sol[i]=0;
+    }
+    int totp = 0;
+    for(int i=0; i<m; i++){
+        int j = 1;
+        while(a2[i]>=j){
+            if(sol[a2[i]-j]==0){
+                sol[a2[i]-j]=a1[i];
+                totp+=a3[i];
+                //printf("%d\n", totp);
+                break;
+            }
+            j+=1;
+        }
+    }
+    printf("Job order\n");
+    for(int i=0; i<n; i++){
+        printf("%d ", sol[i]);
+    }
+    printf("\n");
+    return totp;
+}
+
+
+int main(){
+    int n;
+    printf("Enter no of jobs : ");
+    scanf("%d", &n);
+    int job[n], profit[n], deadline[n];
+    for(int i=0; i<n; i++){
+        printf("Enter job id, profit, deadline of each job : ");
+        scanf("%d %d %d", &job[i], &profit[i], &deadline[i]);
+    }
+    int max_time;
+    printf("Enter maximum time : ");
+    scanf("%d", &max_time);
+    
+    
+    sorting(job, deadline, profit, n);
+    
+    int temp = profit_cal(job, deadline, profit, n, max_time);
+    
+    printf("Total profit = %d", temp);
+
+}
+
+
+Output:
+Enter no of jobs : 7
+Enter job id, profit, deadline of each job : 1 35 3
+Enter job id, profit, deadline of each job : 2 30 4
+Enter job id, profit, deadline of each job : 3 25 4
+Enter job id, profit, deadline of each job : 4 20 2
+Enter job id, profit, deadline of each job : 5 15 3
+Enter job id, profit, deadline of each job : 6 12 1
+Enter job id, profit, deadline of each job : 7 5 2
+Enter maximum time : 4
+Job order
+4 3 1 2 
+Total profit = 110

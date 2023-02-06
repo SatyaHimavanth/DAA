@@ -1,0 +1,14 @@
+struct ListNode* mergeKLists(struct ListNode** lists, int listsSize){
+    struct ListNode *head = NULL, **prev = &head, **leastNode = NULL;
+    do {
+        if (leastNode && *leastNode) { // Get ready to append
+            prev = &(*leastNode)->next;
+            *leastNode = (*leastNode)->next;
+        }        
+        for (int i = 0; i < listsSize; i++) // Find the least element node from the given lists
+            if (!leastNode || !*leastNode || (lists[i] && (*leastNode)->val >= lists[i]->val))
+                leastNode = &lists[i];
+        *prev = leastNode ? *leastNode : NULL; // Append to the list being returned
+    } while (leastNode && *leastNode);
+    return head;
+}

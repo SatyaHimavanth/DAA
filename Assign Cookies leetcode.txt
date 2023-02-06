@@ -1,0 +1,71 @@
+#include <stdio.h>
+
+
+int findContentChildren(int* g, int gSize, int* s, int sSize){
+    int c=0, j=0;
+    int a=gSize>sSize?gSize:sSize;
+    
+    for(int i=0; i<gSize-1; i++){
+        for(int j=i+1; j<gSize; j++){
+            if(g[i]>g[j]){
+                int t=g[i];
+                g[i]=g[j];
+                g[j]=t;
+            }
+        }
+    }
+    
+    for(int i=0; i<sSize-1; i++){
+        for(int j=i+1; j<sSize; j++){
+            if(s[i]>s[j]){
+                int t=s[i];
+                s[i]=s[j];
+                s[j]=t;
+            }
+        }
+    }
+    
+    for(int i=0; i<a; i++){
+        while(i<gSize && j<sSize){
+            if(g[i]<=s[j]){
+                //printf("%d %d\n", g[i], s[j]);
+                c+=1;
+                j+=1;
+                break;
+            }
+            else
+                j+=1;
+        }
+    }
+    return c;
+}
+
+int main(){
+    int gSize, sSize;
+    printf("Enter g, s Sizes :"); 
+    scanf("%d %d", &gSize, &sSize);
+    int g[gSize], s[sSize];
+    printf("Enter elements in g array:\n");
+    for(int i=0; i<gSize; i++){
+        scanf("%d", &g[i]);
+    }
+    printf("Enter elements in s array:\n");
+    for(int i=0; i<sSize; i++){
+        scanf("%d", &s[i]);
+    }
+    int b = findContentChildren(g,gSize,s,sSize);
+    printf("No of childern satisfied is : %d", b);
+}
+
+
+
+Output:
+Enter g, s Sizes :3 2
+Enter elements in g array:
+1
+2
+3
+Enter elements in s array:
+1
+1
+No of childern satisfied is : 1

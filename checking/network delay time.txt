@@ -1,0 +1,48 @@
+#include <limits.h>
+
+int max(int num1, int num2)
+{
+    return (num1 > num2 ) ? num1 : num2;
+}
+
+int networkDelayTime(int** times, int timesSize, int* timesColSize, int n, int k){
+
+    int dist[n+1];
+    for(int i=0; i<n+1; i++){
+        dist[i]=INT_MAX;
+    }
+
+    dist[k] = 0;
+    for (int i=0; i<timesSize; i++){                        // check these for loops 
+        for (int j=0; j<timesSize; j++){
+            int u = times[i][0], v = times[i][1], w = times[i][2];
+            if ((dist[u] != INT_MAX) && (dist[v] > dist[u] + w)) {
+                dist[v] = dist[u] + w;
+            }
+        }
+    }
+
+    int max_wait = 0;
+    for (int i = 1; i <= n; i++)
+        max_wait = max(max_wait, dist[i]);
+    if(max_wait == INT_MAX){
+        return -1;
+    }
+    else{
+        return max_wait;
+    }
+}
+
+
+
+
+testcase
+
+[[1,2,1],[2,3,7],[1,3,4],[2,1,2]]
+3
+2
+
+6
+
+
+https://leetcode.com/problems/network-delay-time/solutions/109982/c-bellman-ford/

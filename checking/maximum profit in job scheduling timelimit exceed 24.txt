@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Job {
+    int start, end, profit;
+};
+
+int cmp(const void* a, const void* b) {
+    struct Job *jobA = (struct Job *) a;
+    struct Job *jobB = (struct Job *) b;
+    return jobA->end - jobB->end;
+}
+
+int jobScheduling(int* startTime, int startTimeSize, int* endTime, int endTimeSize, int* profit, int profitSize) {
+    int n = startTimeSize;
+    struct Job jobs[n];
+    for (int i = 0; i < n; i++) {
+        jobs[i].start = startTime[i];
+        jobs[i].end = endTime[i];
+        jobs[i].profit = profit[i];
+    }
+    qsort(jobs, n, sizeof(struct Job), cmp);
+    int dp[n];
+    for (int i = 0; i < n; i++) dp[i] = jobs[i].profit;
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j < i; j++) {
+            if (jobs[j].end <= jobs[i].start) {
+                dp[i] = fmax(dp[i], dp[j] + jobs[i].profit);
+            }
+        }
+    }
+    int maxProfit = 0;
+    for (int i = 0; i < n; i++) {
+        maxProfit = fmax(maxProfit, dp[i]);
+    }
+    return maxProfit;
+}
+
+
+
+
+
+
+
+
+
+
+
+int jobScheduling(int* startTime, int startTimeSize, int* endTime, int endTimeSize, int* profit, int profitSize){
+
+    int n = startTimeSize;
+    int jobs[n][3];
+    for(int i=0;i<n;i++){
+        jobs[i][0] = startTime[i];
+	    jobs[i][1] = endTime[i];
+	    jobs[i][2] = profit[i];
+    }
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n-1; j++){
+            if(jobs[j][1]>jobs[j+1][1]){
+                int ts = jobs[j][0];
+                int te = jobs[j][1];
+                int tp = jobs[j][2];
+                jobs[j][0]=jobs[j+1][0];
+                jobs[j][1]=jobs[j+1][1];
+                jobs[j][2]=jobs[j+1][2];
+                jobs[j+1][0]=ts;
+                jobs[j+1][1]=te;
+                jobs[j+1][2]=tp;
+            }
+        }
+    }
+    for(int i=0; i<n; i++){
+        printf("%d %d %d\n", jobs[i][0], jobs[i][1], jobs[i][2]);
+    }
+    // Arrays.sort(jobs,(a,b)->a[1]-b[1]);
+    int dp[n];
+    dp[0] = jobs[0][2];
+    for(int i=1; i<n; i++){
+        dp[i] = dp[i-1];
+        int l = 0,r = i - 1,prev = 0;
+        while(l<=r){
+            int mid = (l+r)/2;
+            if(jobs[mid][1]<=jobs[i][0]){
+                prev = dp[mid];
+                l = mid + 1;
+            }
+            else{
+                r = mid - 1;
+            }
+        }
+        if(dp[i]<jobs[i][2]+prev){
+    	    dp[i] = jobs[i][2]+prev;
+        }
+    }
+    return dp[n-1];
+}

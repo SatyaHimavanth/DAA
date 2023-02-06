@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int in(char ch, char a[], int b){
+    int i=0, c=-1;
+    while(i<b){
+        if(a[i]==ch){
+            c=i;
+            break;
+        }
+        else
+            i++;
+    }
+    return c;
+}
+
+int lengthOfLongestSubstring(char * s){
+    int a=0;
+    char arr[100];
+    int max=0;
+    memset(arr, '\0', sizeof(arr));
+    
+    for(int i=0; i<strlen(s); i++){
+        if(a!=0){
+            int c=in(s[i], arr, a);
+            if(c!=-1){
+                if(max<strlen(arr))
+                    max=strlen(arr);
+                while(i<strlen(s) && c!=-1){//abcabdbde
+                    i++;
+                    c = in(s[i], arr, a);
+                }
+                i=i-1;
+                char chk=s[i];
+                i=i-1;
+                while(chk!=s[i]){
+                    i--;
+                }
+                // printf("%d %d\n", c, i);
+                a=0;
+                memset(arr, '\0', sizeof(arr));
+            }
+            else{
+                arr[a++]=s[i];
+            }
+        }
+        else{
+            arr[a++]=s[i];
+        }
+    }
+    if(max<strlen(arr))
+        max=strlen(arr);
+    
+    return max;
+}
+
+int main()
+{
+    char *s = "pwwkew";
+    
+    int res = lengthOfLongestSubstring(s);
+    
+    printf("\n%d", res);
+}

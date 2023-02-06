@@ -1,0 +1,70 @@
+#include <limits.h>
+
+int minCostConnectPoints(int** points, int pointsSize, int* pointsColSize){
+    if(pointsSize>1){
+        int a[pointsSize][pointsSize], min_cost=INT_MAX;
+        int k, l;
+        
+        for(int i=0; i<pointsSize; i++){
+            for(int j=0; j<pointsSize; j++){
+                if(i==j)
+                    a[i][j]=INT_MAX;
+                else{
+                    a[i][j]=abs(points[i][0]-points[j][0])+abs(points[i][1]-points[j][1]);
+                    if(a[i][j]<min_cost){
+                        min_cost=a[i][j];
+                        k=i;
+                        l=j;
+                    }
+                }
+            }
+        }
+        /*
+        for(int i=0; i<pointsSize; i++){
+            for(int j=0; j<pointsSize; j++){
+                printf("%d  ", a[i][j]);
+            }
+            printf("\n");
+        }
+        */
+        int near[pointsSize];
+        for(int i=0; i<pointsSize; i++){
+            if(a[i][l]<a[i][k])
+                near[i]=l;
+            else
+                near[i]=k;
+        }
+        near[k]=-1;
+        near[l]=-1;
+        /*
+        for(int c=0; c<pointsSize; c++){
+            printf("%d  ", near[c]);
+        }
+        printf("\n");
+        */
+        
+        for(int i=1; i<pointsSize-1; i++){
+            int min = INT_MAX;
+            int j1=0, j=0;
+            while(j1<pointsSize){
+                if(near[j1]!=-1 && a[j1][near[j1]]<min){
+                    min = a[j1][near[j1]];
+                    j=j1;
+                }
+                j1++;
+            }
+            min_cost=min_cost+a[j][near[j]];
+            near[j]=-1;
+            
+            for(int k=0; k<pointsSize; k++){
+                if(near[k]!=-1 && a[k][near[k]]>a[k][j])
+                    near[k]=j;
+            }
+        }
+    
+        return min_cost;
+    }
+    else{
+        return 0;
+    }
+}

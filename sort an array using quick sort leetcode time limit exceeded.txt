@@ -1,0 +1,34 @@
+void swap(int *a, int *b){
+    int temp=*a;
+    *a=*b;
+    *b=temp;
+}
+
+int partition(int* nums, int l, int h){
+    int po = nums[h];
+    int i = (l-1);
+
+    for (int j = l; j < h; j++) {
+        if (nums[j] <= po) {
+            i++;
+        swap(&nums[i], &nums[j]);
+        }
+    }
+    swap(&nums[i+1], &nums[h]);
+    
+    return (i+1);
+}
+
+void quickSort(int* nums, int l, int h) {
+    if (l < h) {
+        int po = partition(nums, l, h);
+        quickSort(nums, l, po-1);
+        quickSort(nums, po+1, h);
+    }
+}
+
+int* sortArray(int* nums, int numsSize, int* returnSize){
+    quickSort(nums, 0, numsSize-1);
+    *returnSize = numsSize;
+    return nums;
+}

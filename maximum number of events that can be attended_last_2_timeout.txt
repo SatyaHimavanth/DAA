@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void sortevents(int** events, int eventsSize, int *eventsColSize){
+    for(int i=0; i<eventsSize-1; i++){
+        for(int j=1+i; j<eventsSize; j++){
+            if(events[i][1]>events[j][1]){
+                int temp = events[i][0];
+                events[i][0] = events[j][0];
+                events[j][0] = temp;
+                temp = events[i][1];
+                events[i][1] = events[j][1];
+                events[j][1] = temp;
+            }
+        }
+    }
+}
+
+int maxEvents(int** events, int eventsSize, int *eventsColSize){
+
+    sortevents(events, eventsSize, eventsColSize);
+    int c=0;
+    int eve_chk[events[eventsSize-1][1]];
+    for(int i=0; i<events[eventsSize-1][1]; i++){
+        eve_chk[i]=0;
+    }
+    for(int i=0; i<eventsSize; i++){
+        int t1 = events[i][0];
+        int t2 = events[i][1];
+        for(int j=t1-1; j<t2; j++){
+            if(eve_chk[j]==0){
+                //printf("check = %d\n", eve_chk[j]);
+                c+=1;
+                eve_chk[j]=1;
+                break;
+            }
+        }
+    }
+    return c;
+}
+
+int main()
+{
+    int eventsSize, *eventsColSize=malloc(sizeof(int));
+    printf("Enter no of events : ");
+    scanf("%d", &eventsSize);
+    printf("Enter eventsColSize : ");
+    scanf("%d", eventsColSize);
+    int **events = (int**)malloc(eventsSize*sizeof(int));  //events= [[1,2],[2,3],[3,4],[1,2]]
+    printf("Enter event details.\n");
+    printf("Enter starting time and ending time of every event.\n");
+    for(int i=0; i<eventsSize; i++){
+        events[i] = (int*)malloc(*(eventsColSize)*sizeof(int));
+        scanf("%d %d", &events[i][0], &events[i][1]);
+    }
+    int res = maxEvents(events, eventsSize, eventsColSize);
+    printf("max events that can be attended = %d" ,res);
+
+    return 0;
+}
+
+
+Enter no of events : 4
+Enter eventsColSize : 2
+Enter event details.
+Enter column size, starting time and ending time of every event.
+1 2
+2 3
+3 4
+1 2
+max events that can be attended = 4

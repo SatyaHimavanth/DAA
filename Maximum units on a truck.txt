@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int maximumUnits(int** boxTypes, int boxTypesSize, int* boxTypesColSize, int truckSize){
+    int x, y;
+    for(x = 0; x < boxTypesSize; x++){
+        for(y = x+1; y < boxTypesSize; y++){
+            if(boxTypes[x][1] < boxTypes[y][1]){
+                boxTypes[x][0] ^= boxTypes[y][0];
+                boxTypes[y][0] ^= boxTypes[x][0];
+                boxTypes[x][0] ^= boxTypes[y][0];
+                boxTypes[x][1] ^= boxTypes[y][1];
+                boxTypes[y][1] ^= boxTypes[x][1];
+                boxTypes[x][1] ^= boxTypes[y][1];
+            }
+        }
+    }
+    
+    
+    printf("Sorted boxTypes is\n");
+    for(x = 0; x < boxTypesSize; x++){
+        printf("%d  %d\n", boxTypes[x][0], boxTypes[x][1]);
+    }
+    
+    
+    int maxUnit = 0;
+    for(x = 0; x < boxTypesSize; x++){
+        for(y = 0; y < boxTypes[x][0]; y++){
+            maxUnit += boxTypes[x][1];
+            printf("Check maxUnits increment\n");
+            printf("%d  %d\n", maxUnit, boxTypes[x][1]);
+            truckSize --;
+            if(truckSize == 0)goto end;
+        }
+    }
+    end:
+    return maxUnit;
+}
+
+int main()
+{
+    int truckSize, boxTypesSize, boxTypesColSize=2;
+    printf("Enter boxtype size : ");
+    scanf("%d", &boxTypesSize);
+    int** boxTypes=(int**)malloc(boxTypesSize* sizeof(int));
+    for(int i=0; i<boxTypesSize; i++){
+        boxTypes[i]=(int*)malloc(boxTypesColSize* sizeof(int));
+    }
+    printf("Enter no of boxs and units per box.\n");
+    for(int i=0; i<boxTypesSize; i++){
+        for(int j=0; j<boxTypesColSize; j++){
+            if(j==0)
+                printf("Enter no of boxs and units per box of box%d.\n", i);
+            scanf("%d", &boxTypes[i][j]);
+        }
+    }
+    printf("Enter truck size : ");
+    scanf("%d", &truckSize);
+    int c = maximumUnits(boxTypes, boxTypesSize, &boxTypesColSize, truckSize);
+    printf("Maximum units = %d", c);
+}
