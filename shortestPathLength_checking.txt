@@ -1,0 +1,70 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+int shortestPathLength(int **graph,int graphSize,int *graphColSize)
+{
+    int **g=graph,n=graphSize,*c=graphColSize;
+    int r=(int)pow(2,n),i,j;
+    int d[r][n];
+    for(i=0;i<r;i++)
+    {
+       for(j=0;j<n;j++)
+       {
+          d[i][j]=-1;
+       }
+    }
+    int q[100000][2],f=0,t=0,mask,k,p,s;
+    for(i=0;i<n;i++)
+    {
+        mask=0|(1<<i);
+        q[t][0]=1;
+        q[t][1]=mask;
+        t=t+1;
+        d[mask][i]=0;
+    }
+    while(f<=t)
+    {
+        for(i=f;i<=t;i++)
+        {
+            f=f+1;
+            j=q[i][0];
+            mask=q[i][1];
+            if(mask==r-1)
+            {
+              return d[mask][j];
+            }
+            for(k=0;k<c[j];k++)
+            {
+              s=g[j][k];
+              p=mask|(1<<s);
+              if(d[p][s]==-1)
+              {
+                d[p][s]=d[mask][j]+1;
+                q[t][0]=s,q[t][1]=p;
+                t=t+1;
+             }
+            }
+        }
+    }
+    return -1;
+}
+int main()
+{
+    int i,j,n;
+    printf("\n Enter number of nodes:");
+    scanf("%d",&n);
+    int g=(int)malloc(n*sizeof(int *));
+    int col=(int)malloc(n*sizeof(int));
+    printf("\n Enter edges count and nodes connected for every node:");
+    for(i=0;i<n;i++)
+    {
+        scanf("%d",&col[i]);
+        g[i]=(int *)malloc(col[i]*sizeof(int));
+        for(j=0;j<col[i];j++)
+        {
+            scanf("%d",&g[i][j]);
+        }
+    }
+    int ans=shortestPathLength(g,n,col);
+    printf("\n Shortest path=%d",ans);
+}
