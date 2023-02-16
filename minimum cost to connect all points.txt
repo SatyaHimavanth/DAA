@@ -1,0 +1,77 @@
+#include <limits.h>
+
+int notin(int size, int point, int arr[]){
+    int r = 1;
+    for(int i=0; i<size; i++){
+        if(arr[i]==point){
+            r=0;
+            break;
+        }
+    }
+    return r;
+}
+
+int minCostConnectPoints(int** points, int pointsSize, int* pointsColSize){
+
+    if(pointsSize>1){
+
+    int b[pointsSize];
+    for(int i=0; i<pointsSize; i++)
+        b[i]=-1;
+    b[0]=0;
+
+    int a[pointsSize][pointsSize];
+    for(int i=0; i<pointsSize; i++){
+        for(int j=0; j<pointsSize; j++){
+            if(i==j)
+                a[i][j]=INT_MAX;
+            else
+                a[i][j]=abs(points[i][0]-points[j][0])+abs(points[i][1]-points[j][1]);
+        }
+    }
+    /*
+    for(int i=0; i<pointsSize; i++){
+        for(int j=0; j<pointsSize; j++){
+            printf("%d  ", a[i][j]);
+        }
+        printf("\n");
+    }
+    */
+    int s=0, c=0, d=-1;
+    int chk=INT_MAX;
+
+    for(int i=1; i<pointsSize; i++){
+        if(a[0][i]<chk){
+            chk=a[0][i];
+            d=i;
+        }
+    }
+    s=s+chk;
+    b[c++]=0;
+    b[c++]=d;
+
+    while(c<pointsSize){
+    chk=INT_MAX;
+        for(int i=0; i<c; i++){
+            for(int j=0; j<pointsSize; j++){
+                if(notin(c, j, b) && a[b[i]][j]<chk){
+                    chk=a[b[i]][j];
+                    d=j;
+                }
+            }
+        }
+        b[c++]=d;
+        s=s+chk;
+    }
+    
+    for(int i=0; i<c; i++){
+        printf("%d ",b[i]);
+    }
+    
+    //printf("\n %d \n", s);
+    return s;
+    }
+    else{
+        return 0;
+    }
+}
